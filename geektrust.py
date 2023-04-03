@@ -1,5 +1,6 @@
 from sys import argv
-from racetrack import parse_command
+from src.racetrack import parse_command
+
 def main():
     if len(argv) != 2:
         raise Exception("File path not entered")

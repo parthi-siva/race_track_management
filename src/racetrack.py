@@ -1,7 +1,7 @@
-from exceptions import (BookingFullException, InvalidEntryTimeException,
+from src.exceptions import (BookingFullException, InvalidEntryTimeException,
                          InvalidExitTimeException)
-from models import TotalBookings
-from utils import (create_booking, update_booking, validate_additional_time,
+from src.models import TotalBookings
+from src.utils import (create_booking, update_booking, validate_additional_time,
                     validate_booking_timing)
 
 
@@ -74,7 +74,7 @@ class BookTrack:
 
     def book(self, total_bookings):
         validate_booking_timing(self.booking_time)
-        booking = create_booking(
+        create_booking(
             vehicle_number=self.vehicle_number,
             vehicle_type=self.vehicle_type,
             booking_time=self.booking_time,
