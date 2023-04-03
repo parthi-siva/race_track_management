@@ -1,15 +1,8 @@
-from src.exceptions import (
-    BookingFullException,
-    InvalidExitTimeException,
-    InvalidEntryTimeException,
-)
-
+from src.exceptions import (BookingFullException, InvalidEntryTimeException,
+                            InvalidExitTimeException)
 from src.models import TotalBookings
-from src.utils import (
-    create_booking,
-    update_booking,
-    validate_booking_timing,
-)
+from src.utils import (create_booking, update_booking,
+                       validate_additional_time, validate_booking_timing)
 
 
 class CommandParseFactory:
@@ -54,16 +47,12 @@ def apply_command(command_objs):
                 result.append("SUCCESS")
             except InvalidEntryTimeException:
                 result.append("INVALID_ENTRY_TIME")
-            except InvalidExitTimeException:
-                result.append("INVALID_EXIT_TIME")
             except BookingFullException:
                 result.append("RACETRACK_FULL")
         elif isinstance(command, UpdateBooking):
             try:
                 command.update(total_bookings)
                 result.append("SUCCESS")
-            except InvalidEntryTimeException:
-                result.append("INVALID_ENTRY_TIME")
             except InvalidExitTimeException:
                 result.append("INVALID_EXIT_TIME")
             except BookingFullException:
@@ -99,7 +88,7 @@ class UpdateBooking:
         self.booking_time = booking_time
 
     def update(self, total_bookings):
-        validate_booking_timing(self.booking_time)
+        validate_additional_time(self.booking_time)
         update_booking(
             vehicle_number=self.vehicle_number,
             booking_time=self.booking_time,

@@ -1,20 +1,11 @@
 import operator
 from datetime import datetime, timedelta
 
-from src.exceptions import (
-    BookingFullException,
-    InvalidEntryTimeException,
-    InvalidExitTimeException,
-)
+from src.exceptions import (BookingFullException, InvalidEntryTimeException,
+                            InvalidExitTimeException)
 
-
-from .models import (
-    Booking,
-    VehicleType,
-    RegularTrackCapacity,
-    VIPTrackCapacity,
-    RaceTrackType,
-)
+from .models import (Booking, RaceTrackType, RegularTrackCapacity, VehicleType,
+                     VIPTrackCapacity)
 
 TRACK_OPENING_TIME = "13:00"
 TRACK_CLOSING_TIME = "20:00"
@@ -23,8 +14,7 @@ TRACK_CLOSING_TIME = "20:00"
 def _create_booking_object(
     vehicle_number, vehicle_type, booking_time, track_type, total_bookings
 ):
-    hour, mins = map(int, booking_time.split(":"))
-    booking_time = create_datetime(hour, mins)
+    booking_time = parse_time(booking_time)
     vehicle_type = operator.attrgetter(vehicle_type)(VehicleType)
     booking = Booking(
         vehicle_number=vehicle_number,
@@ -38,8 +28,7 @@ def _create_booking_object(
 
 
 def validate_booking_timing(booking_time):
-    hour, mins = map(int, booking_time.split(":"))
-    booking_time = create_datetime(hour, mins)
+    booking_time = parse_time(booking_time)
     opening_hour, opening_mins = map(int, TRACK_OPENING_TIME.split(":"))
     track_opentime = create_datetime(opening_hour, opening_mins)
     closing_hour, closing_mins = map(int, TRACK_CLOSING_TIME.split(":"))
@@ -49,6 +38,14 @@ def validate_booking_timing(booking_time):
     elif booking_time + timedelta(hours=3) > track_closing_time:
         raise InvalidEntryTimeException("Booking time should be before 6.00 PM")
     elif booking_time > track_closing_time:
+        raise InvalidExitTimeException("Booking time should be less than 8.00 PM")
+
+
+def validate_additional_time(booking_time):
+    booking_time = parse_time(booking_time)
+    closing_hour, closing_mins = map(int, TRACK_CLOSING_TIME.split(":"))
+    track_closing_time = create_datetime(closing_hour, closing_mins)
+    if booking_time > track_closing_time:
         raise InvalidExitTimeException("Booking time should be less than 8.00 PM")
 
 
@@ -181,8 +178,7 @@ def find_previous_booking(vehicle_number, bookings_list):
 
 
 def _update_booking(booking_obj, booking_time, extra_hours):
-    hour, mins = map(int, booking_time.split(":"))
-    booking_obj.booking_time = create_datetime(hour, mins)
+    booking_obj.booking_time = parse_time(booking_time)
     previous_cost = booking_obj.cost()
     booking_obj.cost = lambda *args, **kwargs: previous_cost + extra_hours * 50
     booking_obj.hours += extra_hours
@@ -190,20 +186,25 @@ def _update_booking(booking_obj, booking_time, extra_hours):
 
 def update_booking(vehicle_number, total_bookings, booking_time):
     booking = find_previous_booking(vehicle_number, total_bookings)
-    extra_hours = compute_extra_hours(booking, booking_time)
-    _update_booking(booking, booking_time, extra_hours)
+    if booking:
+        extra_hours = compute_extra_hours(booking, booking_time)
+        _update_booking(booking, booking_time, extra_hours)
+
+
+def parse_time(booking_time):
+    hour, mins = map(int, booking_time.split(":"))
+    return create_datetime(hour, mins)
 
 
 def compute_booking_time_diff(booking, booking_time):
-    hour, mins = map(int, booking_time.split(":"))
-    booking_time = create_datetime(hour, mins)
+    booking_time = parse_time(booking_time)
     return booking_time - booking.booking_time
 
 
 def compute_extra_hours(booking, booking_time):
     additional_time = compute_booking_time_diff(booking, booking_time)
     extra_hour = 0
-    if booking_time > booking.booking_time + timedelta(hours=3, minutes=15):
+    if parse_time(booking_time) > booking.booking_time + timedelta(hours=3, minutes=15):
         hour2, _, _ = map(int, str(additional_time).split(":"))
         extra_hour = (hour2 - booking.hours) + 1
     return extra_hour

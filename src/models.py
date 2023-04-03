@@ -1,10 +1,8 @@
-from datetime import datetime, timedelta
 import operator
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta
 from enum import Enum
 from typing import List
-
-from src.exceptions import InvalidEntryTimeException, InvalidExitTimeException
 
 TRACK_OPENING_TIME = "13:00"
 TRACK_CLOSING_TIME = "20:00"
@@ -31,10 +29,12 @@ class VIPCost(Enum):
     CAR = 250
     SUV = 300
 
+
 class RegularTrackCapacity(Enum):
     BIKE = 4
     CAR = 2
     SUV = 2
+
 
 class VIPTrackCapacity(Enum):
     CAR = 1
@@ -46,23 +46,8 @@ class Booking:
     vehicle_number: str
     vehicle_type: VehicleType
     booking_time: datetime
-    track_type: RaceTrackType 
+    track_type: RaceTrackType
     hours: int = 3
-
-    def __setattr__(self, name, value):
-        if name == "booking_time":
-            opening_hour, opening_mins = map(int, TRACK_OPENING_TIME.split(":"))
-            track_opentime = create_datetime(opening_hour, opening_mins)
-            closing_hour, closing_mins = map(int, TRACK_CLOSING_TIME.split(":"))
-            track_closing_time = create_datetime(closing_hour, closing_mins)
-            if value < track_opentime:
-                raise InvalidEntryTimeException("Booking time should be after 1.00 PM")
-            elif value + timedelta(hours=3) > track_closing_time:
-                raise InvalidEntryTimeException("Booking time should be before 6.00 PM")
-            elif value > track_closing_time:
-                raise InvalidExitTimeException("Booking time should be less than 8.00 PM")
-        self.__dict__[name] = value
-
 
     def cost(self):
         if self.track_type.value == "REGULAR":
@@ -74,6 +59,7 @@ class Booking:
             return (
                 operator.attrgetter(self.vehicle_type.value)(VIPCost).value * self.hours
             )
+
 
 def create_datetime(hour, minute):
     today = datetime.today()
@@ -94,7 +80,7 @@ class TotalBookings:
         self.current_active_bookings = []
         for x in self.gross_bookings:
             if x.booking_time + timedelta(hours=x.hours) > booking_time:
-                    self.current_active_bookings.append(x)
+                self.current_active_bookings.append(x)
 
     def revenue_from_regular_track(self):
         return sum(
