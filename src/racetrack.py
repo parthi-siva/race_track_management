@@ -1,8 +1,8 @@
-from .exceptions import (BookingFullException, InvalidEntryTimeException,
-                            InvalidExitTimeException)
-from .models import TotalBookings
-from .utils import (create_booking, update_booking,
-                       validate_additional_time, validate_booking_timing)
+from exceptions import (BookingFullException, InvalidEntryTimeException,
+                         InvalidExitTimeException)
+from models import TotalBookings
+from utils import (create_booking, update_booking, validate_additional_time,
+                    validate_booking_timing)
 
 
 class CommandParseFactory:
@@ -29,7 +29,7 @@ def load(commands, factory):
             command_obj.append(
                 factory.build_booking(vehicle_number, booking_time, vehicle_type)
             )
-        else:
+        elif len(command_list) == 3:
             _, vehicle_number, booking_time = command_list
             command_obj.append(
                 factory.build_update_booking(vehicle_number, booking_time)
