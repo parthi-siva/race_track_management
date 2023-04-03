@@ -1,14 +1,23 @@
 import operator
 from datetime import datetime, timedelta
 
-from src.exceptions import (BookingFullException, InvalidEntryTimeException,
-                         InvalidExitTimeException)
-from src.models import (Booking, RaceTrackType, RegularTrackCapacity, VehicleType,
-                     VIPTrackCapacity)
+from src.exceptions import (
+    BookingFullException,
+    InvalidEntryTimeException,
+    InvalidExitTimeException,
+)
+from src.models import (
+    Booking,
+    RaceTrackType,
+    RegularTrackCapacity,
+    VehicleType,
+    VIPTrackCapacity,
+)
 
 TRACK_OPENING_TIME = "13:00"
 TRACK_CLOSING_TIME = "20:00"
 EXTRA_COST = 50
+
 
 def _create_booking_object(
     vehicle_number, vehicle_type, booking_time, track_type, total_bookings
@@ -186,8 +195,10 @@ def update_booking(vehicle_number, total_bookings, booking_time):
         extra_hours = compute_extra_hours(booking, booking_time)
         _update_booking(booking, booking_time, extra_hours)
 
+
 def split_booking_time(booking_time):
     return map(int, booking_time.split(":"))
+
 
 def parse_time(booking_time):
     hour, mins = split_booking_time(booking_time)

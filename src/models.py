@@ -47,6 +47,7 @@ class Status(Enum):
     INVALID_ENTRY_TIME = "INVALID_ENTRY_TIME"
     INVALID_EXIT_TIME = "INVALID_EXIT_TIME"
 
+
 @dataclass
 class Booking:
     vehicle_number: str

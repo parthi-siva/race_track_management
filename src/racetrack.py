@@ -1,11 +1,19 @@
-from src.exceptions import (BookingFullException, InvalidEntryTimeException,
-                         InvalidExitTimeException)
+from src.exceptions import (
+    BookingFullException,
+    InvalidEntryTimeException,
+    InvalidExitTimeException,
+)
 from src.models import TotalBookings, Status
-from src.utils import (create_booking, update_booking, validate_additional_time,
-                    validate_booking_timing)
+from src.utils import (
+    create_booking,
+    update_booking,
+    validate_additional_time,
+    validate_booking_timing,
+)
 
 BOOK_COMMAND_LEN = 4
 UPDATE_BOOK_COMMAND_LEN = 3
+
 
 class CommandParseFactory:
     def build_booking(self, vehicle_number, booking_time, vehicle_type):
