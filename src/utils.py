@@ -68,7 +68,7 @@ def create_regular_car_booking(
     vehicle_number, vehicle_type, booking_time, total_bookings
 ):
     regular_booking_count = get_booked_vehicle_count(
-        total_bookings, vehicle_type, "REGULAR", booking_time
+        total_bookings, vehicle_type, RaceTrackType.REGULAR.value, booking_time
     )
     if (
         regular_booking_count
@@ -89,7 +89,7 @@ def create_regular_car_booking(
 
 def create_vip_car_booking(vehicle_number, vehicle_type, booking_time, total_bookings):
     regular_booking_count = get_booked_vehicle_count(
-        total_bookings, vehicle_type, "VIP", booking_time
+        total_bookings, vehicle_type, RaceTrackType.VIP.value, booking_time
     )
     if (
         regular_booking_count
@@ -108,7 +108,7 @@ def create_vip_car_booking(vehicle_number, vehicle_type, booking_time, total_boo
 
 def create_bike_booking(vehicle_number, vehicle_type, booking_time, total_bookings):
     bike_booking_count = get_booked_vehicle_count(
-        total_bookings, vehicle_type, "REGULAR", booking_time
+        total_bookings, vehicle_type, RaceTrackType.REGULAR.value, booking_time
     )
     if (
         bike_booking_count

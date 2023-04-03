@@ -1,6 +1,6 @@
 from src.exceptions import (BookingFullException, InvalidEntryTimeException,
                          InvalidExitTimeException)
-from src.models import TotalBookings
+from src.models import TotalBookings, Status
 from src.utils import (create_booking, update_booking, validate_additional_time,
                     validate_booking_timing)
 
@@ -46,19 +46,19 @@ def apply_command(command_objs):
         if isinstance(command, BookTrack):
             try:
                 command.book(total_bookings)
-                result.append("SUCCESS")
+                result.append(Status.SUCCESS.value)
             except InvalidEntryTimeException:
-                result.append("INVALID_ENTRY_TIME")
+                result.append(Status.INVALID_ENTRY_TIME.value)
             except BookingFullException:
-                result.append("RACETRACK_FULL")
+                result.append(Status.RACETRACK_FULL.value)
         elif isinstance(command, UpdateBooking):
             try:
                 command.update(total_bookings)
-                result.append("SUCCESS")
+                result.append(Status.SUCCESS.value)
             except InvalidExitTimeException:
-                result.append("INVALID_EXIT_TIME")
+                result.append(Status.INVALID_EXIT_TIME.value)
             except BookingFullException:
-                result.append("RACETRACK_FULL")
+                result.append(Status.RACETRACK_FULL.value)
     return result, total_bookings
 
 

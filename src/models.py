@@ -41,6 +41,12 @@ class VIPTrackCapacity(Enum):
     SUV = 1
 
 
+class Status(Enum):
+    SUCCESS = "SUCCESS"
+    RACETRACK_FULL = "RACETRACK_FULL"
+    INVALID_ENTRY_TIME = "INVALID_ENTRY_TIME"
+    INVALID_EXIT_TIME = "INVALID_EXIT_TIME"
+
 @dataclass
 class Booking:
     vehicle_number: str
