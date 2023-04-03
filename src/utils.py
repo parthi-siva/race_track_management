@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from exceptions import (BookingFullException, InvalidEntryTimeException,
                             InvalidExitTimeException)
 
-from .models import (Booking, RaceTrackType, RegularTrackCapacity, VehicleType,
+from models import (Booking, RaceTrackType, RegularTrackCapacity, VehicleType,
                      VIPTrackCapacity)
 
 TRACK_OPENING_TIME = "13:00"
