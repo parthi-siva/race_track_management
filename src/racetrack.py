@@ -4,6 +4,8 @@ from src.models import TotalBookings
 from src.utils import (create_booking, update_booking, validate_additional_time,
                     validate_booking_timing)
 
+BOOK_COMMAND_LEN = 4
+UPDATE_BOOK_COMMAND_LEN = 3
 
 class CommandParseFactory:
     def build_booking(self, vehicle_number, booking_time, vehicle_type):
@@ -24,12 +26,12 @@ def load(commands, factory):
     command_obj = []
     for command in commands:
         command_list = command.strip().split(" ")
-        if len(command_list) == 4:
+        if len(command_list) == BOOK_COMMAND_LEN:
             _, vehicle_type, vehicle_number, booking_time = command_list
             command_obj.append(
                 factory.build_booking(vehicle_number, booking_time, vehicle_type)
             )
-        elif len(command_list) == 3:
+        elif len(command_list) == UPDATE_BOOK_COMMAND_LEN:
             _, vehicle_number, booking_time = command_list
             command_obj.append(
                 factory.build_update_booking(vehicle_number, booking_time)

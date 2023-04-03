@@ -8,7 +8,7 @@ from src.models import (Booking, RaceTrackType, RegularTrackCapacity, VehicleTyp
 
 TRACK_OPENING_TIME = "13:00"
 TRACK_CLOSING_TIME = "20:00"
-
+EXTRA_COST = 50
 
 def _create_booking_object(
     vehicle_number, vehicle_type, booking_time, track_type, total_bookings
@@ -28,10 +28,8 @@ def _create_booking_object(
 
 def validate_booking_timing(booking_time):
     booking_time = parse_time(booking_time)
-    opening_hour, opening_mins = map(int, TRACK_OPENING_TIME.split(":"))
-    track_opentime = create_datetime(opening_hour, opening_mins)
-    closing_hour, closing_mins = map(int, TRACK_CLOSING_TIME.split(":"))
-    track_closing_time = create_datetime(closing_hour, closing_mins)
+    track_opentime = parse_time(TRACK_OPENING_TIME)
+    track_closing_time = parse_time(TRACK_CLOSING_TIME)
     if booking_time < track_opentime:
         raise InvalidEntryTimeException("Booking time should be after 1.00 PM")
     elif booking_time + timedelta(hours=3) > track_closing_time:
@@ -42,8 +40,7 @@ def validate_booking_timing(booking_time):
 
 def validate_additional_time(booking_time):
     booking_time = parse_time(booking_time)
-    closing_hour, closing_mins = map(int, TRACK_CLOSING_TIME.split(":"))
-    track_closing_time = create_datetime(closing_hour, closing_mins)
+    track_closing_time = parse_time(TRACK_CLOSING_TIME)
     if booking_time > track_closing_time:
         raise InvalidExitTimeException("Booking time should be less than 8.00 PM")
 
@@ -179,7 +176,7 @@ def find_previous_booking(vehicle_number, bookings_list):
 def _update_booking(booking_obj, booking_time, extra_hours):
     booking_obj.booking_time = parse_time(booking_time)
     previous_cost = booking_obj.cost()
-    booking_obj.cost = lambda *args, **kwargs: previous_cost + extra_hours * 50
+    booking_obj.cost = lambda *args, **kwargs: previous_cost + extra_hours * EXTRA_COST
     booking_obj.hours += extra_hours
 
 
