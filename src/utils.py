@@ -127,7 +127,7 @@ def create_bike_booking(vehicle_number, vehicle_type, booking_time, total_bookin
 
 def is_booking_expired(active_bookings, vehicle_type, booking_time, track_type):
     vehicle_list = filter_vehicle_list(active_bookings, vehicle_type, track_type)
-    hour, mins = map(int, booking_time.split(":"))
+    hour, mins = split_booking_time(booking_time)
     return list(
         filter(
             lambda x: x.booking_time + timedelta(hours=x.hours)
@@ -186,9 +186,11 @@ def update_booking(vehicle_number, total_bookings, booking_time):
         extra_hours = compute_extra_hours(booking, booking_time)
         _update_booking(booking, booking_time, extra_hours)
 
+def split_booking_time(booking_time):
+    return map(int, booking_time.split(":"))
 
 def parse_time(booking_time):
-    hour, mins = map(int, booking_time.split(":"))
+    hour, mins = split_booking_time(booking_time)
     return create_datetime(hour, mins)
 
 
@@ -201,6 +203,6 @@ def compute_extra_hours(booking, booking_time):
     additional_time = compute_booking_time_diff(booking, booking_time)
     extra_hour = 0
     if parse_time(booking_time) > booking.booking_time + timedelta(hours=3, minutes=15):
-        hour2, _, _ = map(int, str(additional_time).split(":"))
+        hour2, _, _ = split_booking_time(str(additional_time))
         extra_hour = (hour2 - booking.hours) + 1
     return extra_hour
