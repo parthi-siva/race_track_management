@@ -1,7 +1,7 @@
 import operator
 from datetime import datetime, timedelta
 
-from src.exceptions import (BookingFullException, InvalidEntryTimeException,
+from exceptions import (BookingFullException, InvalidEntryTimeException,
                             InvalidExitTimeException)
 
 from .models import (Booking, RaceTrackType, RegularTrackCapacity, VehicleType,

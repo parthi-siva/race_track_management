@@ -1,7 +1,7 @@
-from src.exceptions import (BookingFullException, InvalidEntryTimeException,
+from exceptions import (BookingFullException, InvalidEntryTimeException,
                             InvalidExitTimeException)
-from src.models import TotalBookings
-from src.utils import (create_booking, update_booking,
+from models import TotalBookings
+from utils import (create_booking, update_booking,
                        validate_additional_time, validate_booking_timing)
 
 
